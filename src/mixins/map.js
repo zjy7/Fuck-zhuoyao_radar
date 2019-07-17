@@ -5,6 +5,11 @@
  */
 var lastinfo = null
 module.exports = {
+  data(){
+    return {
+      myRecordLLs:[]
+    }
+  },
   methods: {
     exportPosition: function() {
       var pos = this.$prompt('请输入标签', '缓存位置', {
@@ -107,7 +112,7 @@ module.exports = {
      * 地图点击事件
      */
     clickMap(e) {
-
+      debugger
       //先移除
        if (lastinfo) {
            lastinfo.close();
@@ -115,6 +120,13 @@ module.exports = {
       this.notify('位置已重置,请重新筛选');
       this.location.longitude = e.latLng.lng;
       this.location.latitude = e.latLng.lat;
+      this.myRecordLLs.push(
+        {
+          longitude:this.location.longitude,
+          latitude:this.location.latitude
+        }
+      )
+      console.log(JSON.stringify(this.myRecordLLs))
       var icon = new qq.maps.MarkerImage(
         'original/image/icon/notify-arrow.png',
         null,
