@@ -8,8 +8,8 @@
     </div>
     <div id="buttons">
       <el-button size="mini" @click="getYaolingInfo">妖灵</el-button>
-      <!-- <el-button size="mini" @click="exportPosition">导出位置</el-button>
-      <el-button size="mini" @click="importPosition">导入位置</el-button> -->
+      <el-button size="mini" @click="exportPosition">导出位置</el-button>
+      <el-button size="mini" @click="importPosition">导入位置</el-button>
       <el-button size="mini" type="warning" @click="debug = !debug">Debug</el-button>
     </div>
     <div id="qmap"></div>
@@ -69,10 +69,10 @@ export default {
 
     if (!(location && settings.position_sync)) {
       location = {
-        longitude: 116.3579177856,
-        latitude: 39.9610780334
-      };
-    }
+        longitude: 120.89729905128479,
+        latitude: 30.837016081138824
+      }
+    };
     return {
       location,
       settings,
@@ -98,8 +98,8 @@ export default {
       botChecked: [],
       botWelcomeInfo: '捉妖扫描机器人2.1启动~有什么问题可以@我哦',
       botLocation: {
-        longitude: 116.3579177856,
-        latitude: 39.9610780334
+        longitude: 120.89729905128479,
+        latitude: 30.837016081138824
       },
       progressShow: false
     };
@@ -112,9 +112,11 @@ export default {
     this.initSockets();
 
     // 获取用户位置
+    debugger
     this.getLocation()
       .then(
         position => {
+          debugger
           this.location.longitude = position.longitude;
           this.location.latitude = position.latitude;
 
@@ -129,10 +131,13 @@ export default {
           });
         },
         e => {
+          debugger
           console.log(e);
         }
       )
-      .catch(b => {});
+      .catch(b => {
+        debugger
+      });
 
     this.addStatus(`捉妖雷达Web版 <br/>
       版本:${APP_VERSION} <br/>`);
@@ -142,6 +147,13 @@ export default {
     });
   },
   methods: {
+    flyToDZCS(){
+      debugger
+      let s = {lat: 30.837016081138824, lng: 120.89729905128479}
+      // this.setPosition(s.lng, s.lat);  
+      let q = new qq.maps.LatLng(s.lat, s.lng)  
+      this.map.panTo(q)     
+    },
     /**
      * 跨域获取最新妖灵数据
      */
@@ -165,11 +177,15 @@ export default {
      */
     buildMarkersByData: function(t) {
       if (t && t.length) {
+        console.log(this.fit)
+        console.log(JSON.stringify(this.fit))
         t.forEach(item => {
           if (
             this.fit[0] === 'special' ||
             this.fit.indexOf(item.sprite_id) > -1
           ) {
+            console.log('addddddddddddddddd..........')
+            console.log(item)
             this.addMarkers(item);
           }
         });
@@ -189,7 +205,7 @@ export default {
 
       // 先清除标记
       this.clearAllMarkers();
-
+      debugger
       if (this.mode === 'normal') {
         this.sendMessage(this.initSocketMessage('1001'));
       } else {
@@ -237,6 +253,7 @@ export default {
   },
   computed: {
     fit: function() {
+      debugger
       let ans = [];
       if (this.mode === 'normal') {
         let _fit = this.settings.fit;
